@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Hash;
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Interfaces\UserRepositoryInterface;
 use App\Models\Cart;
 
 class AuthController extends Controller
@@ -34,6 +34,8 @@ class AuthController extends Controller
                 'national_id' => $request->national_id,
                 'password' => $request->password,
                 'role' => $request->role,  // customer أو agent
+               'phone' => $request->phone,  
+
             ]);
 
             // Create cart for user (only if customer)

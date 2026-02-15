@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'national_id' => $this->national_id,
             'role' => $this->role,
+            'phone' => $this->phone,
             'is_agent' => $this->isAgent(),
             'is_customer' => $this->isCustomer(),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

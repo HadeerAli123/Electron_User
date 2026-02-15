@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Eloquent;
+namespace App\Repositories;
 
-use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseRepository implements BaseRepositoryInterface

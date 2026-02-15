@@ -19,41 +19,45 @@ class RegisterRequest extends FormRequest
      * Get the validation rules that apply to the request.
      */
     public function rules(): array
-    {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'min:3',
-                'max:255',
-            ],
-            'national_id' => [
-                'required',
-                'string',
-                'size:14',
-                'regex:/^[0-9]{14}$/', // فقط أرقام
-                'unique:users,national_id',
-            ],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'unique:users,email',
-            ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-           'role' => 'sometimes|in:customer,agent',
-            ],
-            'phone' => [
-                'nullable',
-                'string',
-'regex:/^[0-9]{10,15}$/',
-            ],
-        ];
+{
+    return [
+        'name' => [
+            'required',
+            'string',
+            'min:3',
+            'max:255',
+        ],
+        'national_id' => [
+            'required',
+            'string',
+            'size:14',
+            'regex:/^[0-9]{14}$/',
+            'unique:users,national_id',
+        ],
+        'email' => [
+            'required',
+            'string',
+            'email',
+            'max:255',
+            'unique:users,email',
+        ],
+        'password' => [
+            'required',
+            'string',
+            'min:8',
+            'confirmed',
+        ],
+        'role' => [
+            'sometimes',
+            'in:customer,agent',
+        ],
+        'phone' => [
+            'nullable',
+            'string',
+            'regex:/^[0-9]{10,15}$/',
+        ],
+    ];
+
     }
 
     /**
