@@ -18,7 +18,9 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $this->image,
+'image' => $this->image 
+    ? asset('storage/' . $this->image) 
+    : null,
             'parent_id' => $this->parent_id,
            
             

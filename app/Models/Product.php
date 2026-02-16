@@ -59,4 +59,8 @@ class Product extends Model
     {
         return $this->installmentPlans()->count() > 0;
     }
+     public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

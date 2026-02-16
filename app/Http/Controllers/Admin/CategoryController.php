@@ -167,7 +167,7 @@ public function __construct( CategoeryRepository $categoryRepo)
         return response()->json([
             'success' => true,
             'message' => 'تم إنشاء الفئة بنجاح',
-                'data' => new CategoryResource($category),
+             'data' => new CategoryResource($category),
         ], 201);
 
     } catch (\Exception $e) {

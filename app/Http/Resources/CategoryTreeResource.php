@@ -17,8 +17,9 @@ class CategoryTreeResource extends JsonResource
   return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug,
-            'image' => $this->image ? asset('storage/' . $this->image) : null,
+'image' => $this->image 
+    ? asset('storage/' . $this->image) 
+    : null,
             'parent_id' => $this->parent_id,
             
             // الأطفال (recursive)

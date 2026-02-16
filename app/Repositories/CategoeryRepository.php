@@ -13,12 +13,14 @@ class CategoeryRepository extends BaseRepository implements CategoryRepositoryIn
     }
 
 ///////////store 
-   public function store(array $data, $imageFile = null)
+   public function store(array $data)
     {
-        if ($imageFile) {
-            $imgPath = $imageFile->store('categories', 'public');
-            $data['image'] = $imgPath;
-        }
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+        
+        $path = $data['image']->store('categories', 'public');
+        
+        $data['image'] = $path;
+    }
 
         return Category::create($data);
     }
@@ -29,9 +31,7 @@ public function update($id, array $data, $imageFile = null)
     {
         $category = $this->find($id);
 
-        // Handle new image upload
         if ($imageFile) {
-            // Delete old image if exists
             if ($category->image) {
                 Storage::disk('public')->delete($category->image);
             }
@@ -46,17 +46,24 @@ public function update($id, array $data, $imageFile = null)
 
 
 /////////////getParentCategories
-
-public function getParentCategories()
+///// بترجع الاقسام الرئيسية مع  الي تحتها بس مش كل الشجرة 
+public function getParentCategories($perPage = 10)
 {
-    return $this->model->whereNull('parent_id')->with('children')->get();
+    return $this->model
+                ->whereNull('parent_id')
+                ->with('children') // eager load children
+                ->paginate($perPage);
 }
 
 /////////////getCategoryWithChildren 
- public function getCategoryWithChildren(int $categoryId)
-    {
-        return $this->model->with('children')->findOrFail($categoryId);
-    }
+///////بديها الاي دي بتاع الكاتيجوري وترجع المستوي الي تحتها مش كل الشجرة 
+public function getCategoryWithChildren(int $categoryId, $perPage = 10)
+{
+    $category = $this->model->findOrFail($categoryId);
+
+    return $category->children()->paginate($perPage); // pagination على الأطفال فقط
+}
+
 
     ////////////getChildCategories 
  public function getChildCategories(int $parentId)

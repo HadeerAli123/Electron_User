@@ -25,7 +25,7 @@ class StoreCategoryRequest extends FormRequest
          'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
                 'parent_id' => 'nullable|exists:categories,id',
-                'image' => 'nullable|image|max:2048',     
+'image' => 'nullable|image|max:10240',
                    ];
     }
 
@@ -38,7 +38,7 @@ class StoreCategoryRequest extends FormRequest
             'description.string' => 'الوصف يجب أن يكون نصاً.',
             'parent_id.exists' => 'الفئة الأب المحددة غير موجودة.',
             'image.image' => 'الملف المرفق يجب أن يكون صورة.',
-            'image.max' => 'حجم الصورة لا يمكن أن يتجاوز 2 ميجابايت.',
+            'image.max' => 'حجم الصورة لا يمكن أن يتجاوز10 ميجابايت.',
         ];
     }
 }
