@@ -1,49 +1,150 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\ProductRepositoryInterface;
+use App\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    protected $productRepository;
+    protected $categoryRepository;
+
+    public function __construct(
+        ProductRepositoryInterface $productRepository,
+        CategoryRepositoryInterface $categoryRepository
+    ) {
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Get all products with filters
      */
-    public function store(Request $request)
+    public function index(Request $request)
     {
-        //
+       
     }
 
     /**
-     * Display the specified resource.
+     * Get product details
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        try {
+            $product = $this->productRepository->getProductWithInstallments($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $product,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Get products by category
      */
-    public function update(Request $request, string $id)
+    public function getByCategory($categoryId)
     {
-        //
+        try {
+            // Verify category exists
+            $this->categoryRepository->findOrFail($categoryId);
+            
+            $products = $this->productRepository->getByCategory($categoryId);
+
+            return response()->json([
+                'success' => true,
+                'data' => $products,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Search products
      */
-    public function destroy(string $id)
+    public function search(Request $request)
     {
-        //
+        try {
+            $searchTerm = $request->input('q');
+
+            if (empty($searchTerm)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'يرجى إدخال كلمة البحث',
+                ], 422);
+            }
+
+            $products = $this->productRepository->search($searchTerm);
+
+            return response()->json([
+                'success' => true,
+                'data' => $products,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Get latest products
+     */
+    public function latest(Request $request)
+    {
+        try {
+            $limit = $request->input('limit', 10);
+            $products = $this->productRepository->getLatest($limit);
+
+            return response()->json([
+                'success' => true,
+                'data' => $products,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Check product availability
+     */
+    public function checkAvailability($id, Request $request)
+    {
+        try {
+            $quantity = $request->input('quantity', 1);
+            $product = $this->productRepository->findOrFail($id);
+            $available = $product->hasStock($quantity);
+
+            return response()->json([
+                'success' => true,
+                'available' => $available,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

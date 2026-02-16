@@ -53,6 +53,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function findWhere(array $where)
     {
-        return $this->model->where($where)->get();
+        
+    return $this->model->where($where)->get();
     }
+
+    
 }
