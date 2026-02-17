@@ -19,10 +19,15 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         return $this->model->byCategory($categoryId)->with('images', 'category')->get();
     }
+
+
       public function search(string $searchTerm)
     {
         return $this->model->search($searchTerm)->with('images', 'category')->get();
     } 
+
+
+    
      public function filterByPriceRange(float $minPrice, float $maxPrice)
     {
         return $this->model->priceBetween($minPrice, $maxPrice)->with('images', 'category')->get();

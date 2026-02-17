@@ -13,16 +13,24 @@ return new class extends Migration
     {
         Schema::create('installment_request', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')
-                ->constrained('orders') 
-                ->onDelete('cascade');
-            $table->foreignId('installment_plan_id')
-                ->constrained('installment_plan') 
-                ->onDelete('cascade');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-             $table->string('national_id', 14)->unique();
-            $table->string('job_title');
-            $table->string('phone');
+
+    $table->foreignId('order_id')
+        ->constrained()
+        ->cascadeOnDelete();
+
+    $table->foreignId('installment_plan_id')
+        ->constrained('installment_plan')
+        ->cascadeOnDelete();
+
+    $table->foreignId('user_id')
+        ->constrained()
+        ->cascadeOnDelete();
+
+    $table->decimal('monthly_salary', 10, 2);
+
+    $table->enum('status', ['pending', 'approved', 'rejected'])
+        ->default('pending');
+
               $table->foreignId('referral_code_id')
                 ->nullable()
                 ->constrained('referral_codes')

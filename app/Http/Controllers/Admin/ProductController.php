@@ -56,7 +56,7 @@ class ProductController extends Controller
     {
         try {
             // Verify category exists
-            $this->categoryRepository->findOrFail($categoryId);
+            $this->categoryRepository->find($categoryId);
             
             $products = $this->productRepository->getByCategory($categoryId);
 
@@ -106,45 +106,28 @@ class ProductController extends Controller
     /**
      * Get latest products
      */
-    public function latest(Request $request)
-    {
-        try {
-            $limit = $request->input('limit', 10);
-            $products = $this->productRepository->getLatest($limit);
-
-            return response()->json([
-                'success' => true,
-                'data' => $products,
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400);
-        }
-    }
+   
 
     /**
      * Check product availability
      */
-    public function checkAvailability($id, Request $request)
-    {
-        try {
-            $quantity = $request->input('quantity', 1);
-            $product = $this->productRepository->findOrFail($id);
-            $available = $product->hasStock($quantity);
+    // public function checkAvailability($id, Request $request)
+    // {
+    //     try {
+    //         $quantity = $request->input('quantity', 1);
+    //         $product = $this->productRepository->findOrFail($id);
+    //         $available = $product->hasStock($quantity);
 
-            return response()->json([
-                'success' => true,
-                'available' => $available,
-            ]);
+    //         return response()->json([
+    //             'success' => true,
+    //             'available' => $available,
+    //         ]);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400);
-        }
-    }
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 400);
+    //     }
+    // }
 }
