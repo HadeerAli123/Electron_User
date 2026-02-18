@@ -48,4 +48,20 @@ class InstallmentPlan extends Model
     {
         return $productPrice * ($this->down_payment_percentage / 100);
     }
+
+    
+    public function isActive(): bool
+    {
+        return $this->is_active === true;
+    }
+
+    // ========================================
+    // Scopes
+    // ========================================
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
 }

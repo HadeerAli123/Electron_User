@@ -60,7 +60,6 @@ class InstallmentRequestController extends Controller
      public function storeRequest(StoreInstallmentRequest $request)
     {
         try {
-            $request->validate();
 
             $installmentRequest = $this->installmentRepo->createRequest(
                 $request->user()->id,
