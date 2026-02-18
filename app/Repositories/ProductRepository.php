@@ -17,7 +17,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
       public function getByCategory( $categoryId)
     {
-        return $this->model->byCategory($categoryId)->with('images', 'category')->get();
+        return $this->model->byCategory($categoryId)->with('images', 'category','installmentPlans')->get();
     }
       public function search(string $searchTerm)
     {
