@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\InstallmentRequestRepository;
 use App\Http\Requests\StoreInstallmentRequest;
+use App\Http\Requests\ReferralCodeRequest;
 class InstallmentRequestController extends Controller
 {
      protected $installmentRepo;
@@ -57,29 +58,44 @@ class InstallmentRequestController extends Controller
 
 
 
-     public function storeRequest(StoreInstallmentRequest $request)
-    {
-        try {
+ public function storeRequest(StoreInstallmentRequest $request)
+{
+    $data = $request->only([
+        'order_id',
+        'installment_plan_id',
+        'monthly_salary',
+        'referral_code'
+    ]);
 
-            $installmentRequest = $this->installmentRepo->createRequest(
-                $request->user()->id,
-                $request->only(['order_id', 'installment_plan_id', 'monthly_salary']),
-                $request->referral_code
-            );
+    $data['user_id'] = $request->user()->id;
 
-            return response()->json([
-                'success' => true,
-                'message' => 'تم تقديم طلب التقسيط بنجاح، سيتم مراجعته قريباً',
-                'data'    => $installmentRequest,
-            ], 201);
+    $installmentRequest = $this->installmentRepo->createRequest($data);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400);
-        }
+    return response()->json([
+        'success' => true,
+        'message' => 'تم تقديم طلب التقسيط بنجاح، سيتم مراجعته قريباً',
+        'data'    => $installmentRequest,
+    ], 201);
+}
+
+public function verifyReferralCode(ReferralCodeRequest $request)
+{
+    try {
+        // هنا الفاليديشن اتعمل تلقائي قبل ما يوصل للكنترولر
+
+        $isValid = $this->installmentRepo->verifyReferralCode($request->code);
+
+        return response()->json([
+            'success' => true,
+            'valid'   => $isValid,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+        ], 400);
+    }
+}
     }
 
-
-}

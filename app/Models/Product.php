@@ -59,7 +59,7 @@ class Product extends Model
     {
         return $this->installmentPlans()->count() > 0;
     }
-     public function variants()
+     public function availableVariants()
     {
         return $this->hasMany(ProductVariant::class);
     }
@@ -141,4 +141,27 @@ class Product extends Model
         return $query->whereBetween('price', [$minPrice, $maxPrice]);
     }
 
+
+    public function getGroupedAvailableVariants()
+{
+    $grouped = [];
+
+    foreach ($this->availableVariants as $variant) {
+        foreach ($variant->variantValues as $variantValue) {
+            $attributeName = $variantValue->attributeValue->attribute->name;
+            $attributeValue = $variantValue->attributeValue->value;
+
+            // استخدم مصفوفة كـ "set" لتفادي in_array
+            $grouped[$attributeName][$attributeValue] = true;
+        }
+    }
+
+    // فقط إرجاع القيم الفعلية
+    foreach ($grouped as $attributeName => $values) {
+        $grouped[$attributeName] = array_keys($values);
+    }
+
+    return $grouped;
+}
+     
 }

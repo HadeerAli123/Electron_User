@@ -1,14 +1,11 @@
 <?php
 
 namespace App\Interfaces;
-
+use Illuminate\Http\Request;
 
 interface  InstallmentRequestRepositoryInterface extends BaseRepositoryInterface
 {
-    /**
-     * Get all installment plans
-     */
-    public function getAllPlans();
+ public function getAllPlans();
 
     /**
      * Get installment plan with products
@@ -63,5 +60,5 @@ interface  InstallmentRequestRepositoryInterface extends BaseRepositoryInterface
     /**
      * Verify referral code
      */
-    public function verifyReferralCode(string $code);
+    public function verifyReferralCode(string $code );
 }

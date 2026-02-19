@@ -59,4 +59,51 @@ class Order extends Model
     {
         return $this->payment_type === 'installment';
     }
+    public function updateStatus(string $status): void
+    {
+        $this->status = $status;
+        $this->save();
+    }
+
+    /**
+     * Calculate total from order items
+     */
+    public function calculateTotal(): float
+    {
+        return $this->orderItems->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+    }
+
+    /**
+     * Scope to filter by status
+     */
+    public function scopeByStatus($query, string $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Scope to filter by payment type
+     */
+    public function scopeByPaymentType($query, string $paymentType)
+    {
+        return $query->where('payment_type', $paymentType);
+    }
+
+    /**
+     * Scope to get user orders
+     */
+    public function scopeForUser($query, int $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    /**
+     * Scope to get recent orders
+     */
+    public function scopeRecent($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
 }

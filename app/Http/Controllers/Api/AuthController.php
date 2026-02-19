@@ -119,4 +119,50 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
+
+        public function profile(Request $request)
+    {
+        try {
+            $user = $this->userRepository->getUserWithOrders($request->user()->id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $user,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Update user profile
+     */
+    // public function updateProfile(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'name' => 'sometimes|required|string|max:255',
+    //             'email' => 'sometimes|required|email',
+    //         ]);
+
+    //         $user = $this->userRepository->update($request->user()->id, $request->only(['name', 'email']));
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'تم تحديث الملف الشخصي بنجاح',
+    //             'data' => $user,
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 400);
+    //     }
+    // }
 }

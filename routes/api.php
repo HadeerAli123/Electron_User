@@ -15,6 +15,9 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
 });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile']);
+});
 
 
 Route::prefix('categories')->group(function () {
@@ -50,7 +53,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-
+Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('installments')->group(function () {
 
@@ -65,5 +68,6 @@ Route::prefix('installments')->group(function () {
     Route::get('/requests/{requestId}', [InstallmentRequestController::class, 'getRequest']);
 
   
-    Route::post('/requests', [InstallmentRequestController::class, 'createRequest']);
+    Route::post('/requests', [InstallmentRequestController::class, 'storeRequest']);
+});
 });

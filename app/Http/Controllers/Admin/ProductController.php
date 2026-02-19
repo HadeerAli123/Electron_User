@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
-
+use App\Http\Resources\ProductResource;
 class ProductController extends Controller
 {
     protected $productRepository;
@@ -34,21 +34,28 @@ class ProductController extends Controller
     
     public function show($id)
     {
-        try {
-            $product = $this->productRepository->getProductWithInstallments($id);
+        $productData = $this->productRepository->getProductVariantsGrouped($id);
 
-            return response()->json([
-                'success' => true,
-                'data' => $product,
-            ]);
+    $productResource = new ProductResource((object)[
+        'id' => $productData['product']->id,
+        'name' => $productData['product']->name,
+        'description' => $productData['product']->description,
+        'price' => $productData['product']->price,
+        'stock' => $productData['product']->stock,
+        'cover_image' => $productData['product']->cover_image,
+        'category' => $productData['product']->category,
+        'images' => $productData['product']->images,
+        'installmentPlans' => $productData['product']->installmentPlans,
+        'available_variants' => $productData['variants'],
+        'grouped_attributes' => $productData['grouped_attributes'],
+    ]);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 404);
-        }
-    }
+    return response()->json([
+        'success' => true,
+        'data' => $productResource,
+    ]);
+}
+
 
     /**
      * Get products by category
