@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Interfaces\ProductRepositoryInterface;
@@ -108,9 +108,27 @@ class ProductController extends Controller
      * Get latest products
      */
    
-    }
 
     /**
      * Check product availability
      */
-    
+    // public function checkAvailability($id, Request $request)
+    // {
+    //     try {
+    //         $quantity = $request->input('quantity', 1);
+    //         $product = $this->productRepository->findOrFail($id);
+    //         $available = $product->hasStock($quantity);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'available' => $available,
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 400);
+    //     }
+    // }
+}

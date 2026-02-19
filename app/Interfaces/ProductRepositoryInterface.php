@@ -33,14 +33,8 @@ interface ProductRepositoryInterface extends BaseRepositoryInterface
      */
     public function getProductWithInstallments(int $productId);
 
-    /**
-     * Get featured/latest products
-     */
-  
-    /**
-     * Add images to product
-     */
-    
+   
+     
 
     /**
      * Attach installment plans to product

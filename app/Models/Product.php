@@ -63,4 +63,82 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
+
+
+    public function hasStock(int $quantity): bool
+    {
+        return $this->stock >= $quantity;
+    }
+
+    /**
+     * Decrease product stock
+     */
+    public function decreaseStock(int $quantity): bool
+    {
+        if (!$this->hasStock($quantity)) {
+            return false;
+        }
+
+        $this->stock -= $quantity;
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Increase product stock
+     */
+    public function increaseStock(int $quantity): void
+    {
+        $this->stock += $quantity;
+        $this->save();
+    }
+
+
+
+    /**
+     * Get product with discount if applicable
+     */
+    public function getPriceAfterDiscount(?float $discount = null): float
+    {
+        if (!$discount) {
+            return $this->price;
+        }
+
+        return $this->price - ($this->price * $discount / 100);
+    }
+
+    /**
+     * Scope to filter products by category
+     */
+    public function scopeByCategory($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId);
+    }
+
+    /**
+     * Scope to get only in-stock products
+     */
+    public function scopeInStock($query)
+    {
+        return $query->where('stock', '>', 0);
+    }
+
+    /**
+     * Scope to search products
+     */
+    public function scopeSearch($query, $searchTerm)
+    {
+        return $query->where('name', 'LIKE', "%{$searchTerm}%")
+            ->orWhere('description', 'LIKE', "%{$searchTerm}%");
+    }
+
+    /**
+     * Scope to filter by price range
+     */
+    public function scopePriceBetween($query, $minPrice, $maxPrice)
+    {
+        return $query->whereBetween('price', [$minPrice, $maxPrice]);
+    }
+
 }
